@@ -42,13 +42,24 @@ new class extends Component {
         <x-primary-button type="submit">Tambah</x-primary-button>
         <x-input-error :messages="$errors->get('todoName')" class="mt-3"/>
     </form>
-    @foreach ($todos as $todo)
-        <div wire:key='{{ $todo->id }}' class="flex items-center space-x-4 space-y-4" >
-            {{ $todo->name }}
-        </div>
-        <div>
-            <button wire:click="deleteTodo({{ $todo->id }})" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
-                Hapus
-        </div>
-    @endforeach
+    <table class="min-w-full divide-y divide-gray-200">
+        <thead>
+            <tr>
+                <th class="px-4 py-2 text-left">Nama Todo</th>
+                <th class="px-4 py-2 text-left">Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($todos as $todo)
+                <tr wire:key="{{ $todo->id }}">
+                    <td class="px-4 py-2">{{ $todo->name }}</td>
+                    <td class="px-4 py-2">
+                        <button wire:click="deleteTodo({{ $todo->id }})" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                            Hapus
+                        </button>
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
 </div>
