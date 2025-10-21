@@ -3,7 +3,7 @@
 name: First Stage, Linting
 on:
   push:
-    branches: ["dev"]
+    branches: [ "dev" ]
 
 jobs:
   lint:
