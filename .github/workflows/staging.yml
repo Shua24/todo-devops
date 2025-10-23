@@ -3,7 +3,7 @@ name: Laravel Tests
 on:
   pull_request:
     branches: [ "staging" ]
-    types: [ closed ]
+    types: [ opened, synchronize, reopened ]
 
 jobs:
   laravel-tests:
@@ -30,5 +30,5 @@ jobs:
     - name: Execute tests (Unit and Feature tests) via PHPUnit/Pest
       env:
         DB_CONNECTION: sqlite
-        DB_DATABASE: database/database.sqlite
+        DB_DATABASE: ":memory:"
       run: php artisan test
