@@ -2,7 +2,7 @@ name: Laravel Tests
 
 on:
   pull_request:
-    branches: [ "staging" ]
+    branches: [ "main" ]
     types: [ opened, synchronize, reopened ]
 
 jobs:
