@@ -32,7 +32,7 @@ new class extends Component {
     public function with()
     {
         return [
-            'todos' => Todo::all(),
+            'todos' => Auth::user()->todos()->get(),
         ];
     }
 }; ?>
