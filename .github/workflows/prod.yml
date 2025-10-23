@@ -1,0 +1,34 @@
+# Prod.yml: Final workflow
+
+name: Final Checks and Deployment
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  laravel-deploy:
+    name: Generate App Key and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup PHP
+      - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
+        with:
+          php-version: '8.0'
+          extensions: mbstring, bcmath
+          coverage: none
+      - name: Install Composer dependencies
+        run: composer install --no-progress --no-suggest --prefer-dist
+      - name: Copy .env
+        run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+      - name: Generate application key
+        run: php artisan key:generate
+      - name: Cache config and routes
+        run: |
+          php artisan config:cache
+          php artisan route:cache
+
+# TODO: Deployment workflow here as one of the final steps (Docker, Kubernetes, etc.)
