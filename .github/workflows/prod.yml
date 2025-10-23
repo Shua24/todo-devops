@@ -22,7 +22,9 @@ jobs:
           extensions: mbstring, bcmath
           coverage: none
       - name: Install Composer dependencies
-        run: composer install --no-progress --no-suggest --prefer-dist
+        run: |
+          composer update
+          composer install --no-progress --no-suggest --prefer-dist
       - name: Copy .env
         run: php -r "file_exists('.env') || copy('.env.example', '.env');"
       - name: Generate application key
