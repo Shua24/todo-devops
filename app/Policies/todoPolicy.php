@@ -37,7 +37,7 @@ class todoPolicy
      */
     public function update(User $user, todo $todo): bool
     {
-        return false;
+        return $user->id === $todo->user_id;
     }
 
     /**
