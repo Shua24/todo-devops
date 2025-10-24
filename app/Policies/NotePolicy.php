@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
+use App\Models\Note;
 use App\Models\User;
-use App\Models\todo;
 use Illuminate\Auth\Access\Response;
 
-class todoPolicy
+class NotePolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -19,7 +19,7 @@ class todoPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, todo $todo): bool
+    public function view(User $user, Note $note): bool
     {
         return false;
     }
@@ -35,23 +35,23 @@ class todoPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, todo $todo): bool
+    public function update(User $user, Note $note): bool
     {
-        return $user->id === $todo->user_id;
+        return $note->user_id === $user->id;
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, todo $todo): bool
+    public function delete(User $user, Note $note): bool
     {
-        return $user->id === $todo->user_id;
+        return $note->user_id === $user->id;
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, todo $todo): bool
+    public function restore(User $user, Note $note): bool
     {
         return false;
     }
@@ -59,7 +59,7 @@ class todoPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, todo $todo): bool
+    public function forceDelete(User $user, Note $note): bool
     {
         return false;
     }
