@@ -64,6 +64,11 @@ new class extends Component {
                         <button wire:click="deleteTodo({{ $todo->id }})" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
                             Hapus
                         </button>
+                        <button class="bg-yellow-600 hover:bg-yellow-700 text-black font-bold py-2 px-4 rounded">
+                            <a href="{{ route('todos.show', $todo->id) }}">
+                                Rincian/Edit
+                            </a>
+                        </button>
                     </td>
                 </tr>
             @endforeach
