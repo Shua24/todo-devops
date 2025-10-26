@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Livewire\TodoDetails;
 use App\Livewire\Analytics;
 use App\Livewire\CloseTodo;
 
@@ -13,6 +14,10 @@ Route::view('dashboard', 'dashboard')
 Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
+
+Route::get('todos/{id}', TodoDetails::class)
+    ->middleware(['auth'])
+    ->name('todos.show');
 
 Route::get('/analytics', Analytics::class)
     ->middleware(['auth'])
