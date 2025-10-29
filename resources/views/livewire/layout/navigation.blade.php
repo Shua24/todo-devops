@@ -43,6 +43,11 @@ new class extends Component {
                         {{ __('Masa Tenggat') }}
                     </x-nav-link>
                 </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('tasks.done')" :active="request()->routeIs('tasks.done')" wire:navigate>
+                        {{ __('Kegiatan Selesai') }}
+                    </x-nav-link>
+                </div>
             </div>
 
             <!-- Settings Dropdown -->
