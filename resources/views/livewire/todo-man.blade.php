@@ -22,6 +22,15 @@ new class extends Component {
             ]);
     }
 
+    public function toggleCompleted(int $id)
+    {
+        $todo = Todo::findOrFail($id);
+        $this->authorize('update', $todo);
+
+        $todo->is_completed = !$todo->is_completed;
+        $todo->save();
+    }
+
     public function deleteTodo(int $id)
     {
         $todo = Todo::find($id);
@@ -48,8 +57,9 @@ new class extends Component {
     <table class="min-w-full divide-y divide-gray-200">
         <thead>
             <tr>
-                <th class="px-4 py-2 text-left">Nama Todo</th>
+                <th class="px-4 py-2 text-left">Nama Kegiatan</th>
                 <th class="px-4 py-2 text-left">Deadline</th>
+                <th class="px-4 py-2 text-left">Selesai</th>
                 <th class="px-4 py-2 text-left">Aksi</th>
             </tr>
         </thead>
@@ -61,8 +71,18 @@ new class extends Component {
                         {{ \Carbon\Carbon::parse($todo->deadline)->format('d-m-Y') }}
                     </td>
                     <td class="px-4 py-2">
-                        <button wire:click="deleteTodo({{ $todo->id }})" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                        <input type="checkbox" wire:click="toggleCompleted({{ $todo->id }})"
+                            {{ $todo->is_completed ? 'checked' : '' }}>
+                    </td>
+                    <td class="px-4 py-2">
+                        <button wire:click="deleteTodo({{ $todo->id }})"
+                            class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
                             Hapus
+                        </button>
+                        <button class="bg-yellow-600 hover:bg-yellow-700 text-black font-bold py-2 px-4 rounded">
+                            <a href="{{ route('todos.show', $todo->id) }}">
+                                Rincian/Edit
+                            </a>
                         </button>
                     </td>
                 </tr>
