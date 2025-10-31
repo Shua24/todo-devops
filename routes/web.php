@@ -7,7 +7,6 @@ use App\Livewire\Analytics;
 use App\Livewire\CloseTodo;
 use App\Livewire\Notes;
 use App\Livewire\NoteEdit;
-
 Route::view('/', 'welcome');
 
 Route::view('dashboard', 'dashboard')
@@ -18,7 +17,11 @@ Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
 
-Route::get('/analytics', Analytics::class)
+Route::get('/tasks/done', DoneTasks::class)
+    ->middleware(['auth'])
+    ->name('tasks.done');
+
+Route::get('todos/{id}', TodoDetails::class)
     ->middleware(['auth'])
     ->name('todos.show');
 
