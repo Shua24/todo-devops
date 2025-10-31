@@ -87,3 +87,26 @@ test('correct password must be provided to delete account', function () {
 
     $this->assertNotNull($user->fresh());
 });
+
+test('user bio can be updated', function () {
+    $user = User::factory()->create([
+        'bio' => 'Old bio',
+    ]);
+
+    $this->actingAs($user);
+
+    $component = Volt::test('profile.update-profile-information-form')
+        ->set('name', $user->name)
+        ->set('email', $user->email)
+        ->set('bio', 'This is my new bio')
+        ->call('updateProfileInformation');
+
+    $component
+        ->assertHasNoErrors()
+        ->assertNoRedirect();
+
+    $user->refresh();
+
+    expect($user->bio)->toBe('This is my new bio');
+});
+

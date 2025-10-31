@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'bio',
     ];
 
     /**
@@ -49,5 +50,10 @@ class User extends Authenticatable
     public function todos()
     {
         return $this->hasMany(todo::class);
+    }
+
+    public function notes()
+    {
+        return $this->hasMany(Note::class);
     }
 }
