@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Livewire\DoneTasks;
 use App\Livewire\TodoDetails;
+use App\Livewire\DoneTasks;
 use App\Livewire\Analytics;
 use App\Livewire\CloseTodo;
 use App\Livewire\Notes;
@@ -18,11 +18,7 @@ Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
 
-Route::get('/tasks/done', DoneTasks::class)
-    ->middleware(['auth'])
-    ->name('tasks.done');
-
-Route::get('todos/{id}', TodoDetails::class)
+Route::get('/analytics', Analytics::class)
     ->middleware(['auth'])
     ->name('todos.show');
 
