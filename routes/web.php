@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Livewire\TodoDetails;
 use App\Livewire\DoneTasks;
+use App\Livewire\TodoDetails;
 use App\Livewire\Analytics;
 use App\Livewire\CloseTodo;
 use App\Livewire\Notes;
