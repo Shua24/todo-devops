@@ -31,3 +31,7 @@ jobs:
         DB_DATABASE: ":memory:"
       run: |
         php artisan test
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarqube-scan-action@v6
+      env:
+          SONAR_TOKEN: ${{ SECRETS.SONAR_TOKEN }}
