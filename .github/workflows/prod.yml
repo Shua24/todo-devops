@@ -30,5 +30,10 @@ jobs:
         run: |
           php artisan config:cache
           php artisan route:cache
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarqube-scan-action@v6
+        env:
+          SONAR_TOKEN: ${{ SECRETS.SONAR_TOKEN }}
+
 
 # TODO: Deployment workflow here as one of the final steps (Docker, Kubernetes, etc.)
