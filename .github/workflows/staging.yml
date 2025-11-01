@@ -32,6 +32,6 @@ jobs:
       run: |
         php artisan test
     - name: SonarCloud Scan
-      uses: SonarSource/sonarqube-scan-action@v4.1.0
+      uses: SonarSource/sonarqube-scan-action@v6
       env:
           SONAR_TOKEN: ${{ SECRETS.SONAR_TOKEN }}
