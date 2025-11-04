@@ -31,12 +31,58 @@
         </x-primary-button>
     </form>
 
+
     {{-- Notes list --}}
     <div class="relative min-h-[500px]">
         @forelse($notes as $note)
-            <div class="p-4 rounded shadow absolute bg-blue-300 dark:bg-blue-500 text-gray-900 dark:text-gray-100"
-                style="top: {{ rand(0, 300) }}px; left: {{ rand(0, 300) }}px; width: 200px;">
-
+            <div
+                x-data="{
+                    x: {{ rand(0,300) }},
+                    y: {{ rand(0,300) }},
+                    dragging: false,
+                    startX: 0,
+                    startY: 0,
+                    startMouseX: 0,
+                    startMouseY: 0
+                }"
+                x-init="
+                    $watch('x', value => {
+                        // You can save the position to backend here if needed
+                        console.log('Note {{ $note->id }} moved to:', value, y);
+                    })
+                "
+                @mousedown="
+                    dragging = true;
+                    startX = x;
+                    startY = y;
+                    startMouseX = $event.clientX;
+                    startMouseY = $event.clientY;
+                "
+                @mouseup="dragging = false"
+                @mousemove="
+                    if (dragging) {
+                        x = startX + ($event.clientX - startMouseX);
+                        y = startY + ($event.clientY - startMouseY);
+                    }
+                "
+                @touchstart="
+                    dragging = true;
+                    startX = x;
+                    startY = y;
+                    startMouseX = $event.touches[0].clientX;
+                    startMouseY = $event.touches[0].clientY;
+                "
+                @touchend="dragging = false"
+                @touchmove="
+                    if (dragging) {
+                        x = startX + ($event.touches[0].clientX - startMouseX);
+                        y = startY + ($event.touches[0].clientY - startMouseY);
+                    }
+                "
+                class="p-4 rounded shadow absolute bg-blue-300 dark:bg-blue-500 text-gray-900 dark:text-gray-100 cursor-move select-none"
+                :style="`top: ${y}px; left: ${x}px; width: 200px; transform: rotate(${dragging ? '0deg' : '{{ rand(-5,5) }}deg'}); z-index: ${dragging ? 50 : 1};`"
+                :class="dragging ? 'shadow-2xl scale-105 transition-transform' : ''"
+            >
                 @if ($note->title)
                     <div class="font-semibold mb-2">{{ $note->title }}</div>
                 @endif
@@ -45,12 +91,12 @@
 
                 <div class="flex justify-end gap-2 mt-4">
                     <button type="button" wire:click="goToEdit({{ $note->id }})"
-                        class="text-yellow-600 dark:text-yellow-500 hover:underline">
+                            class="text-yellow-600 dark:text-yellow-500 hover:underline">
                         Edit
                     </button>
 
                     <button type="button" @click="deleteNoteId = {{ $note->id }}"
-                        class="text-red-400 dark:text-red-600 hover:underline">
+                            class="text-red-400 dark:text-red-600 hover:underline">
                         Hapus
                     </button>
                 </div>
@@ -61,7 +107,7 @@
     </div>
 
     {{-- Alpine.js Modal --}}
-    <div x-show="deleteNoteId" x-cloak class="fixed inset-0 z-50 flex items-center justify-center">
+    <div x-show="deleteNoteId" class="fixed inset-0 z-50 flex items-center justify-center" style="display: none;">
         <div class="fixed inset-0 bg-black opacity-50" @click="deleteNoteId = null"></div>
 
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md relative">
@@ -74,15 +120,13 @@
             </p>
 
             <div class="flex justify-end gap-3">
-                <button type="button" @click="deleteNoteId = null"
-                    class="px-4 py-2 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-400 dark:hover:bg-gray-500">
+                <x-secondary-button @click="deleteNoteId = null">
                     Batal
-                </button>
+                </x-secondary-button>
 
-                <button type="button" wire:click="deleteNote(deleteNoteId)" @click="deleteNoteId = null"
-                    class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+                <x-danger-button wire:click="deleteNote(deleteNoteId)" @click="deleteNoteId = null">
                     Hapus
-                </button>
+                </x-danger-button>
             </div>
         </div>
     </div>
