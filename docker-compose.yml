@@ -1,0 +1,40 @@
+services:
+  web:
+    image: prabustialwan/todo-devops:latest
+    build:
+      target: web
+      context: .
+    env_file:
+      - .env
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - db
+
+  node:
+    image: node:18
+    working_dir: /var/www/html
+    volumes:
+      - .:/var/www/html
+    command: >
+      sh -c "npm install && npm run build"
+      
+  db:
+    platform: "linux/amd64"
+    image: mysql:5.7
+    env_file:
+      - .env
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+
+volumes:
+  dbdata:
