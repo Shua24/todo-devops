@@ -1,3 +1,20 @@
+---
+# 0. PersistentVolume for MySQL
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    # Change this to a real path on your node where you want to store MySQL data.
+    path: "/mnt/data/mysql"
+
+---
 # 1. Minta Jatah Hard Disk (Storage)
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -42,9 +59,25 @@ spec:
         name: mysql
         env:
         - name: MYSQL_ROOT_PASSWORD
-          value: "passwordku" # <--- Password Root MySQL
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: MYSQL_ROOT_PASSWORD
         - name: MYSQL_DATABASE
-          value: "laravel_db" # <--- Otomatis bikin database 'laravel_db'
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: MYSQL_DATABASE
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: MYSQL_USER
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: MYSQL_PASSWORD
         ports:
         - containerPort: 3306
           name: mysql

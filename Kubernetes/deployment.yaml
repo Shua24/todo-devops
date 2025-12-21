@@ -14,8 +14,26 @@ spec:
     spec:
       containers:
       - name: laravel
-        image: docker-php-sample-server:latest
-        imagePullPolicy: Never  # <--- PENTING: Supaya K8s ambil dari local Minikube, bukan internet
+        image: prabustialwan/todo-devops:latest
+        env:
+          - name: DB_CONNECTION
+            value: "mysql"
+          - name: DB_HOST
+            value: "mysql-service"
+          - name: DB_PORT
+            value: "3306"
+          - name: DB_DATABASE
+            valueFrom:
+              secretKeyRef:
+                name: laravel-db-secret
+                key: DB_DATABASE
+          - name: DB_USERNAME
+            value: root
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: laravel-db-secret
+                key: DB_PASSWORD
         ports:
         - containerPort: 80
 ---
@@ -30,5 +48,5 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 80
-  type: NodePort # Supaya bisa diakses dari browser laptop
+  type: NodePort
 
