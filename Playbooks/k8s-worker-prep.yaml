@@ -1,0 +1,19 @@
+---
+
+#kubeadm join 192.168.122.89:6443 --token y67p6x.r5vzalvs5dnu3k1y \
+#        --discovery-token-ca-cert-hash sha256:67f07882836e3ae7114ab6fb84d8b1ce221570544079bd75c63f0da477701927
+
+- name: k8s-worker-prep
+  hosts: workers
+  tasks:
+    - name: join the master node
+      ansible.builtin.command: >
+        kubeadm join 192.168.122.88:6443 --token fop4l7.vjm530lj8k5fl4cj \
+        --discovery-token-ca-cert-hash sha256:e9d32a94fdf44289060538ffb4327a2434e202244f175e8078ee5586d9e3acb3 
+
+      register: join_output
+
+    - name: show kubeadm join output
+      ansible.builtin.debug:
+        var: join_output.stdout
+

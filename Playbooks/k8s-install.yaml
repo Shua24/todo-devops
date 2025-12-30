@@ -1,0 +1,11 @@
+---
+  - name: k8s-install
+    hosts: linux
+    tasks:
+      - name: ensure k8s packages are there
+        apt:
+          name:
+            - kubeadm
+            - kubelet
+            - kubectl
+          state: present

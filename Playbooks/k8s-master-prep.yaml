@@ -1,0 +1,12 @@
+---
+- name: initialize kubeadm
+  hosts: master
+  become: yes
+  tasks:
+    - name: run kubeadm init
+      ansible.builtin.command: kubeadm init
+      register: kubeadm_output
+
+    - name: show kubeadm output
+      debug:
+        var: kubeadm_output.stdout

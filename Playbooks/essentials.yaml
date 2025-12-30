@@ -1,0 +1,13 @@
+---
+  - name: essentials
+    hosts: linux
+    tasks:
+      - name: ensure apt-transport-https, ca-certificates, curl, gpg, and docker is there
+        apt:
+          name:
+            - apt-transport-https
+            - ca-certificates
+            - curl 
+            - gpg
+            - docker.io
+          state: latest

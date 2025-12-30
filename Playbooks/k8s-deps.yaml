@@ -1,0 +1,20 @@
+---
+  - name: k8s-deps
+    hosts: linux
+    tasks:
+      - name: ensure keyrings exists for kubernetes
+        file:
+          path: /etc/apt/keyrings
+          state: directory
+          mode: '0755'
+
+      - name: download kubernetes apt repo gpg keys
+        shell: |
+          curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.34/deb/Release.key \
+          | gpg  --batch --yes --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+      - name: add kubernetes repositories
+        apt_repository:
+          filename: kubernetes
+          repo: "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.34/deb/ /"
+          state: present

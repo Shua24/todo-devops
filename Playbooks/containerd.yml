@@ -1,0 +1,61 @@
+---
+- name: Install and configure containerd for Kubernetes
+  hosts: linux
+
+  tasks:
+    - name: Install required packages
+    # Kubernetes docs require these for containerd
+      apt:
+        name:
+          - ca-certificates
+          - curl
+        state: present
+        update_cache: yes
+
+    - name: Add Docker’s official GPG key (containerd is shipped from Docker repo)
+      ansible.builtin.get_url:
+        url: https://download.docker.com/linux/debian/gpg
+        dest: /etc/apt/keyrings/docker.asc
+        mode: '0644'
+
+    - name: Add Docker apt repository
+      ansible.builtin.copy:
+        dest: /etc/apt/sources.list.d/docker.list
+        content: |
+          deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian trixie stable
+
+    - name: Update apt package index
+      apt:
+        update_cache: yes
+
+    - name: Install containerd
+      apt:
+        name: containerd.io
+        state: present
+
+    - name: Create containerd config directory
+      file:
+        path: /etc/containerd
+        state: directory
+
+    - name: Generate default containerd config
+      command: containerd config default
+      register: containerd_default_config
+
+    - name: Write containerd config to file
+      copy:
+        dest: /etc/containerd/config.toml
+        content: "{{ containerd_default_config.stdout }}"
+
+    - name: Ensure systemd cgroup driver (required by Kubernetes)
+      replace:
+        path: /etc/containerd/config.toml
+        regexp: 'SystemdCgroup = false'
+        replace: 'SystemdCgroup = true'
+
+    - name: Restart containerd
+      systemd:
+        name: containerd
+        state: restarted
+        enabled: yes
+

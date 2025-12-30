@@ -1,0 +1,29 @@
+---
+- name: kube-prep
+  hosts: master
+  tasks:
+    - name: get home of uid 1000
+      ansible.builtin.command: getent passwd 1000
+      register: uid_passwd
+      changed_when: false
+
+    - name: set fact of home dir
+      ansible.builtin.set_fact:
+        user_home: "{{ uid_passwd.stdout.split(':')[5] }}"
+
+    - name: ensure kube directory exists
+      ansible.builtin.file:
+        path: "{{ user_home }}/.kube"
+        state: directory
+        owner: 1000
+        group: 1000
+        mode: '0755'
+
+    - name: copy kube admin config
+      ansible.builtin.copy:
+        src: /etc/kubernetes/admin.conf
+        dest: "{{ user_home }}/.kube/config"
+        owner: 1000
+        group: 1000
+        mode: '0644'
+        remote_src: yes

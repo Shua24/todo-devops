@@ -1,0 +1,23 @@
+---
+- name: Disable swap permanently
+  hosts: all
+  become: true
+  tasks:
+
+    - name: Turn off swap for current session
+      ansible.builtin.command: swapoff -a
+
+    - name: Permanently disable swap by commenting entries in /etc/fstab
+      ansible.builtin.replace:
+        path: /etc/fstab
+        regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
+        replace: '# \1'
+        backup: yes
+
+    - name: Mask swap units (optional, prevents systemd from enabling swap)
+      ansible.builtin.shell: |
+        for unit in $(systemctl list-unit-files --type=swap | awk '/swap/ {print $1}'); do
+          systemctl mask "$unit"
+        done
+      args:
+        executable: /bin/bash 
